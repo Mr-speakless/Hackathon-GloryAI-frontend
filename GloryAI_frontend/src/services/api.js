@@ -1,6 +1,7 @@
 import { getMockResult } from "./mockData";
 //这里改成后端接口后记得把USE_MOCK改成false
 const USE_MOCK = true;
+
 const API_BASE_URL = "http://localhost:8000/api";
 
 export async function analyzeSkin(imageFile) {
