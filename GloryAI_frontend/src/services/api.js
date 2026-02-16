@@ -1,6 +1,6 @@
 import { getMockResult } from "./mockData";
-//这里改成后端接口后记得把USE_MOCK改成false
-const USE_MOCK = true;
+//后端已改接口： 把USE_MOCK改成false
+const USE_MOCK = false;
 
 const API_BASE_URL = "http://localhost:8000/api";
 
@@ -17,15 +17,12 @@ export async function analyzeSkin(imageFile) {
   const formData = new FormData();
   formData.append("image", imageFile);
 
-  const response = await fetch(`${API_BASE_URL}/analyze`, {
+  const response = await fetch(`${API_BASE_URL}/analyze/`, {
     method: "POST",
     body: formData,
   });
 
-  if (!response.ok) {
-    throw new Error("分析失败，请稍后重试");
-  }
-
-  return response.json();
+  const data = await response.json();
+  console.log("analyze response:", data);
+  return data;
 }
-
