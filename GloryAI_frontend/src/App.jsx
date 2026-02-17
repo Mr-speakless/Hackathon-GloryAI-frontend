@@ -23,6 +23,12 @@ function App() {
     if (!currentMaskKey) return null;
     return analysisData?.skin_analysis?.[currentMaskKey]?.ui_score ?? null;
 }, [analysisData, currentMaskKey]);
+  
+  const currentMaskUrl = useMemo(() => {
+  if (!currentMaskKey) return null;
+  return analysisData?.skin_analysis?.[currentMaskKey]?.mask_url ?? null;
+}, [analysisData, currentMaskKey]);
+
 
   
 
@@ -95,6 +101,7 @@ function App() {
       onReset={resetAll}
       currentMaskKey={currentMaskKey}
       currentMaskScore={currentMaskScore}
+      currentMaskUrl={currentMaskUrl}
     />
   );
 }

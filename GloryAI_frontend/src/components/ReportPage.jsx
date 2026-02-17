@@ -12,8 +12,10 @@ export default function ReportPage({
   onReset,
   currentMaskKey,
   currentMaskScore,
+  currentMaskUrl,
 }) {
   
+
   const interactiveClass =
     "transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.18)] active:translate-y-0 active:shadow-[0_2px_6px_rgba(0,0,0,0.14)]";
 
@@ -21,16 +23,29 @@ export default function ReportPage({
     <main className="grid h-screen w-screen gap-4 overflow-hidden bg-zinc-200 px-4 py-4 text-zinc-900 md:grid-cols-[34%_66%] md:px-5 md:py-5">
       <section className="grid h-full grid-rows-[1fr_auto] gap-3 overflow-hidden">
         {uploadedImageUrl ? (
-          <img
-            className="h-full w-full rounded-xl bg-zinc-300 object-cover"
-            src={uploadedImageUrl}
-            alt="用户上传图片"
-          />
-        ) : (
-          <div className="grid h-full w-full place-items-center rounded-xl bg-zinc-300 text-2xl">
-            皮肤检测返回的图片
-          </div>
-        )}
+  <div className="relative h-full w-full overflow-hidden rounded-xl bg-zinc-300">
+    {/* 原图 */}
+    <img
+      className="h-full w-full object-cover"
+      src={uploadedImageUrl}
+      alt="用户上传图片"
+    />
+
+    {/* 叠加 mask（透明） */}
+    {currentMaskUrl ? (
+      <img
+        className="absolute inset-0 h-full w-full object-cover opacity-60 mix-blend-multiply pointer-events-none"
+        src={currentMaskUrl}
+        alt={`mask-${currentMaskKey}`}
+      />
+    ) : null}
+  </div>
+) : (
+  <div className="grid h-full w-full place-items-center rounded-xl bg-zinc-300 text-2xl">
+    皮肤检测返回的图片
+  </div>
+)}
+
 
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex w-full flex-wrap justify-center gap-4">
