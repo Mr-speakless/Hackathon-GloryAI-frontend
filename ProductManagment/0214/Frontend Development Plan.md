@@ -212,33 +212,38 @@ export async function analyzeSkin(imageFile) {
 ### API 接口约定（最重要）
 | # | 问题 | 状态 | 说明 |
 |---|---|---|---|
-| 1 | 前端上传图片的接口 URL 是什么？（建议 `POST /api/analyze`） | ❓ | 前端 POST multipart/form-data 到这个地址 |
-| 2 | 请求格式：前端用 `multipart/form-data` 上传图片 OK 吗？ | ❓ | 后端收到后自己走 Perfect Corp 的 file→PUT→task→poll 流程 |
-| 3 | 后端返回给前端的 JSON 结构是什么？ | ❓ | 建议：`{ skin_analysis: {...原始数据}, recommendations: {...} }` |
-| 4 | 出错时返回什么格式？ | ❓ | 建议：`{ error: "message", error_code: "XXX" }` |
+| 1 | 前端上传图片的接口 URL 是什么？（建议 `POST /api/analyze`） | ✅  | 前端现在调用：POST http://localhost:8000/api/analyze/（见前端 API_BASE_URL="http://localhost:8000/api" + fetch(.../analyze/)；后端 gloryai_backend/urls.py 把 API.urls 挂在 /api/ 下，api/urls.py 里有 path("analyze/", views.analyze)|
+
+| 2 | 请求格式：前端用 `multipart/form-data` 上传图片 OK 吗？ | ✅ | 后端收到后自己走 Perfect Corp 的 file→PUT→task→poll 流程 |前端用 FormData，字段名是 image；后端用 request.FILES.get("image") 接收并读取 bytes|
+
+| 3 | 后端返回给前端的 JSON 结构是什么？ |  ✅ |start 接口 /api/analyze/：现在返回 {"success": true, "task_id": "...", "raw": {...}}（后来说已经是这个结构）。status 接口 /api/youcam/skin-analysis/status/<task_id>/：返回 {"success": true, "data": <原始youcam>, "normalized": <整理后的结果或null>}（见你 view 代码）。前端真正应该用 normalized 作为报告数据源。 | 
+
+| 4 | 出错时返回什么格式？ | ✅ | 后端错误返回形如：{"success": false, "error": "..."}，并用 HTTP status 400/500/405 区分。你清单建议 { error, error_code }，目前没有 error_code，但 error 已有 |
 
 ### Perfect Corp API 相关（已从文档确认）
 | # | 信息 | 状态 | 说明 |
 |---|---|---|---|
 | 5 | 用 SD 还是 HD 模式？ | ✅ | 目前我们先暂用SD模式 |
-| 6 | 请求哪些 dst_actions？ | ✅ | 目前暂定SD里面的所有信息好了 |
+| 6 | 请求哪些 dst_actions？ | ✅ | view 里 DEFAULT_ACTIONS = ["wrinkle", "pore", "texture", "acne"]，并传给 start_skin_analysis_from_upload(... dst_actions=DEFAULT_ACTIONS ...)。所以目前明确就是这四项。|
 | 7 | 分数含义 | ✅ | ui_score 1-100，越高=皮肤越好。前端用 100-ui_score 计算问题严重度 |
 | 8 | 图片尺寸要求 | ✅ | SD: 长边≤4096px, 短边≥480px。后端需要做 resize |
 
 ### 产品推荐
 | # | 问题 | 状态 | 说明 |
 |---|---|---|---|
-| 9 | 产品推荐数据由后端返回？还是前端硬编码？ | ❓ | 前端目前先硬编码 mock 产品数据 |
-| 10 | 产品数据包含哪些字段？ | ❓ | 建议：name, brand, image_url, purchase_url, description, target_issue |
-| 11 | 产品图片从哪来？ | ❓ | 后端提供 URL？还是前端自己放静态图？ |
+| 9 | 产品推荐数据由后端返回？还是前端硬编码？ | ❓ 后端暂不确定| 前端目前先硬编码 mock 产品数据| 
+App.jsx 里传 recommendations={analysisData?.recommendations}，但后端 normalized 里没有 recommendations 字段。同时有 mock 开关 getMockResult()。所以目前真实后端不返回推荐，推荐应该还是前端 mock（或为空）。 |
+
+| 10 | 产品数据包含哪些字段？ | ❓未确认 | 建议：name, brand, image_url, purchase_url, description, target_issue |
+| 11 | 产品图片从哪来？ | ❓ 未确认 | 后端提供 URL？还是前端自己放静态图？ |
 
 ### 部署和协作
 | # | 问题 | 状态 | 说明 |
 |---|---|---|---|
-| 12 | 开发时后端跑在 `localhost:8000` 吗？ | ❓ | 前端 vite proxy 需要知道地址 |
-| 13 | 后端需要配置 CORS | ❓ | Django 装 django-cors-headers，允许 localhost:5173 |
-| 14 | 报告文字最终由谁生成？ | ❓ | 暂时前端生成（标记测试版），后续可切到后端 LLM |
-| 15 | mask 图片（叠加层）后端是返回 URL 还是 base64？ | ❓ | Perfect Corp 返回 mask PNG 文件名，后端需要把下载 URL 传给前端 |
+| 12 | 开发时后端跑在 `localhost:8000` 吗？ |✅ | API_BASE_URL = "http://localhost:8000/api"，所以默认就是 8000。  |
+| 13 | 后端需要配置 CORS | ✅ |后端 settings 里已安装 corsheaders，middleware 也加了，并且 CORS_ALLOWED_ORIGINS 包含 http://localhost:5173 和 http://127.0.0.1:5173。 |
+| 14 | 报告文字最终由谁生成？ | ✅（目前前端） | 暂时前端生成（标记测试版），后续可切到后端 LLM |
+| 15 | mask 图片（叠加层）后端是返回 URL 还是 base64？ | ✅（URL）| Perfect Corp 返回 mask PNG 文件名，后端需要把下载 URL 传给前端 |status normalize 里：mask_url: (item.get("mask_urls") or [None])[0]，也就是返回 URL（或文件 URL）。不是 base64。
 
 ---
 
