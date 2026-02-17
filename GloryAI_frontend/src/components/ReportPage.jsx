@@ -10,7 +10,10 @@ export default function ReportPage({
   report,
   recommendations,
   onReset,
+  currentMaskKey,
+  currentMaskScore,
 }) {
+  
   const interactiveClass =
     "transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.18)] active:translate-y-0 active:shadow-[0_2px_6px_rgba(0,0,0,0.14)]";
 
@@ -38,7 +41,8 @@ export default function ReportPage({
             >
               &lt;
             </button>
-            <span className="text-xl">皮肤检测分析：{masks[maskIndex] || "-"}</span>
+            <span className="text-xl">皮肤检测分析：{currentMaskKey}
+  {typeof currentMaskScore === "number" ? ` · ${currentMaskScore}` : ""}</span>
             <button
               className={`rounded-lg bg-zinc-300 px-3 py-1 text-xl disabled:cursor-not-allowed disabled:opacity-50 ${interactiveClass}`}
               disabled={!masks.length}

@@ -18,6 +18,14 @@ function App() {
     return Object.keys(skinAnalysis).filter((key) => key !== "all" && key !== "skin_age");
   }, [analysisData]);
 
+  const currentMaskKey = useMemo(() => (masks.length ? masks[maskIndex] : null), [masks, maskIndex]);
+  const currentMaskScore = useMemo(() => {
+    if (!currentMaskKey) return null;
+    return analysisData?.skin_analysis?.[currentMaskKey]?.ui_score ?? null;
+}, [analysisData, currentMaskKey]);
+
+  
+
   useEffect(() => {
     return () => {
       if (uploadedImageUrl) URL.revokeObjectURL(uploadedImageUrl);
@@ -36,7 +44,7 @@ function App() {
 
     try {
       const result = await analyzeSkin(file);
-      setAnalysisData(result);
+      setAnalysisData(result?.normalized ?? result);
       setMaskIndex(0);
       setPageState("report");
     } catch (err) {
@@ -85,6 +93,8 @@ function App() {
       report={report}
       recommendations={analysisData?.recommendations}
       onReset={resetAll}
+      currentMaskKey={currentMaskKey}
+      currentMaskScore={currentMaskScore}
     />
   );
 }
