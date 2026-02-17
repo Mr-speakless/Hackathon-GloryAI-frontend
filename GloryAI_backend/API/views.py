@@ -46,7 +46,8 @@ def skin_analysis_start(request):
             miniserver_args={},
         )
         print(">>> YOUCAM RESULT:", out)
-        return JsonResponse({"success": True, "data": out})
+        return JsonResponse({"success": True, "task_id": out.get("task_id"), "raw": out})
+
     except YouCamError as e:
         print(">>> YOUCAM ERROR:", str(e))
         return JsonResponse({"success": False, "error": str(e)}, status=400)
