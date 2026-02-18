@@ -1,1 +1,9 @@
 ﻿@import "tailwindcss";
+
+:root {
+  --icon-chip-gradient: linear-gradient(to bottom left, rgb(163 163 163), rgb(167 139 250), rgb(254 215 170));
+}
+
+.icon-chip-gradient {
+  background-image: var(--icon-chip-gradient);
+}

@@ -14,6 +14,8 @@ const ISSUE_LABELS = {
   droopy_upper_eyelid: "上眼睑松弛",
   droopy_lower_eyelid: "下眼睑松弛",
 };
+
+const CORE_METRICS = ["wrinkle", "pore", "texture", "acne"];
 // 根据严重程度得分转换为风险等级
 function toRiskLevel(severity) {
   if (severity >= 35) return "高";
@@ -52,6 +54,27 @@ export function buildReport(rawData) {
     .sort((a, b) => b.severity - a.severity);
 
   const topIssues = issues.slice(0, 3);
+  const focusMetrics = CORE_METRICS.map((key) => {
+    const score = analysis?.[key]?.ui_score;
+    if (typeof score !== "number") {
+      return {
+        key,
+        label: ISSUE_LABELS[key] ?? key,
+        score: "-",
+        risk: "-",
+        severity: null,
+      };
+    }
+
+    const severity = 100 - score;
+    return {
+      key,
+      label: ISSUE_LABELS[key] ?? key,
+      score,
+      risk: toRiskLevel(severity),
+      severity,
+    };
+  });
 
   const oilinessScore = analysis.oiliness?.ui_score ?? 70;
   const moistureScore = analysis.moisture?.ui_score ?? 70;
@@ -60,13 +83,15 @@ export function buildReport(rawData) {
   const overallScore = typeof overall === "number" ? Math.round(overall) : "-";
   const skinAge = typeof rawData?.skin_age === "number" ? rawData.skin_age : "-";
 
+  const summaryTargets =
+    topIssues.length > 0 ? topIssues.map((item) => item.label).join("、") : "细纹、毛孔、纹理与痘痘";
+
   return {
-    summary: `[测试版] 你的皮肤整体状态稳定，当前优先关注${topIssues
-      .map((item) => item.label)
-      .join("、")}。建议先做基础护理，再逐步增加功能型产品。`,
+    summary: `[测试版] 你的皮肤整体状态稳定，当前优先关注${summaryTargets}。建议先做基础护理，再逐步增加功能型产品。`,
     skinType: inferSkinType(oilinessScore, moistureScore),
     skinAge,
     overallScore,
     topIssues,
+    focusMetrics,
   };
 }

@@ -22,3 +22,7 @@ node_modules/
 
 # macOS
 .DS_Store
+
+# Ignore React Tailwind Components project
+/ReactTailwindComponents/
+
