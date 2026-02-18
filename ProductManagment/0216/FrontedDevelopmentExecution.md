@@ -1139,3 +1139,117 @@ npm run dev -- --host
   - 外层由固定宽度改为：`w-[62px]` 并加 `flex flex-col items-center`
   - 图片尺寸改为：`h-[82px] w-[62px]`
   - 文字加 `w-full text-center`，确保在单元格内水平居中
+
+---
+
+## 36. ReportPage 收敛执行记录（按设计图，仅内容区）
+
+### 36.1 本轮目标
+- 按 `ProductManagment/0216/ReportPage收敛计划.md` 收敛 `/report` 内容区。
+- 保持页面级导航不变，保留业务链路和后端接口契约。
+
+### 36.2 实际执行动作
+1. 更新 `GloryAI_frontend/src/components/ReportPage.jsx`
+   - 新增本地状态 `overlayOn`。
+   - 左图 mask 叠层受 `overlayOn` 控制。
+   - 原说明文案替换为 `Overlay` 开关（含 `role=switch` 和 `focus-visible`）。
+   - 保留左右按钮切换 `mask`。
+   - 底部动作由“重新检测”改为：`Read Full Report` / `Regenerate`。
+   - `Regenerate` 复用 `onReset`。
+2. 更新 `GloryAI_frontend/src/components/SkinReport.jsx`
+   - 重排主卡：标题 + `Skin Age` 标签。
+   - 新增 CSS 仪表盘式 `Overall Score` 区块。
+   - 将 `focusMetrics` 与 `topIssues` 转为两行胶囊指标卡。
+   - 保持数据来源不变（仍使用 `report`）。
+3. 更新 `GloryAI_frontend/src/components/RecommendationGrid.jsx`
+   - 推荐项改为横向轻卡布局。
+   - 保留后端为空时静态兜底策略。
+   - 兜底标记降级为轻角标。
+4. 新增文档：`ProductManagment/0216/ReportPage收敛计划.md`
+   - 固化本轮目标、差异对比、实施范围、验收标准。
+
+### 36.3 验收清单（待你回填）
+- TC-RP-01：Overlay 开关可切换 mask 显隐；左右按钮切换正常。
+- TC-RP-02：主卡出现年龄标签、仪表盘和两行胶囊指标。
+- TC-RP-03：推荐区为横向轻卡，桌面三列，移动端自适应。
+- TC-RP-04：底部显示 `Read Full Report` / `Regenerate`，后者可回 `/skin-lab`。
+- TC-RP-05：核心数据仍来自真实映射，无静态值覆盖真实值。
+
+### 36.4 备注
+- 本轮未改 API 接口与 `buildReport` 输出结构。
+- 页面级导航（顶部/底部）保持现状。
+
+## 37. ReportPage 二次收敛（基于实测截图问题复盘）
+
+### 37.1 复盘结论（问题评估）
+根据你反馈截图，上一版主要问题：
+1. 左侧图像区过于“满铺”，缺少参考图中的外层框与留白层次。
+2. 右侧主卡虽然已重排，但信息密度和视觉节奏仍偏“工程态”。
+3. 推荐卡与参考图相比，卡片对齐和文字权重还不够统一。
+4. 底部动作区与参考图的弱动作风格不够接近。
+
+### 37.2 本轮修复动作
+1. 更新 `GloryAI_frontend/src/components/ReportPage.jsx`
+   - 左侧改为“外层容器 + 内层图像卡 + 底部控制区”三级结构。
+   - 图像卡新增边框与阴影，叠层透明度下调。
+   - mask 切换行与 Overlay 开关的间距、背景、边框重新收敛。
+   - 右侧推荐标题改为：`Starter Kit Recommendations` / `Targeted Enhancement`。
+   - 底部弱动作改为带箭头的浅色文本入口：`Read Full Report ›` / `Regenerate ›`。
+2. 更新 `GloryAI_frontend/src/components/SkinReport.jsx`
+   - 标题接入 `SkinReportIcon.svg`。
+   - 仪表盘改为半圆渐变进度视觉，降低卡片粗糙感。
+   - `Skin Age` 与摘要行重新排布。
+   - 指标胶囊统一为 3 列 x 2 行，风险色映射保持不变。
+3. 更新 `GloryAI_frontend/src/components/RecommendationGrid.jsx`
+   - 推荐卡继续保留横向结构，统一标题层级和行高。
+   - 保留静态兜底但弱化角标视觉权重。
+
+### 37.3 待你回归验证
+- RC-RP-2-01：左侧是否接近参考图（外层框、内图卡、底部控件层次）。
+- RC-RP-2-02：主卡信息层级是否更清晰（标题/年龄/摘要/胶囊）。
+- RC-RP-2-03：推荐区是否更接近参考图（两组卡片密度与对齐）。
+- RC-RP-2-04：`Overlay`、左右切换、`Regenerate` 功能是否全部正常。
+
+## 38. ReportPage 结构按提示词重排
+
+### 38.1 修改背景
+- 按 `ReportPage.jsx` 文件内提示词重排组件结构：
+  - `main` 负责全屏渐变背景。
+  - 上栏单独放 `TopNavPill`。
+  - 下栏拆分左右内容（左图像卡 / 右报告内容）。
+
+### 38.2 实际修改
+- 文件：`GloryAI_frontend/src/components/ReportPage.jsx`
+1. 修复错误的 DOM 层级与多余闭合标签。
+2. 重建布局为 `grid-rows-[auto_1fr]`：顶部导航 + 底部内容区。
+3. 底部内容区改为 `md:grid-cols-[35%_65%]`。
+4. 保留现有业务交互：
+   - 左右 `mask` 切换
+   - `Overlay` 开关
+   - `Regenerate` -> `onReset`
+
+### 38.3 预期
+- 结构清晰并和提示词一致。
+- 避免因 JSX 结构错乱引发渲染/编译问题。
+
+## 39. ReportPage 按提示词结构修正（上下再左右）
+- 文件：`GloryAI_frontend/src/components/ReportPage.jsx`
+- 调整为：`main = 上栏 navbar + 下栏内容`。
+- 下栏内容再拆分：`左图像卡片 + 右报告区`。
+- 保留原交互：左右切换、Overlay 开关、Regenerate。
+
+## 40. ReportPage JSX 语法修复
+- 报错：`Expected corresponding JSX closing tag for 'section'`。
+- 文件：`GloryAI_frontend/src/components/ReportPage.jsx`
+- 修复：将右侧内容区末尾错误的 `</div>` 更正为 `</section>`。
+- 结果：消除该 parse error。
+
+## 41. ReportPage 布局模型改为 Flex（配合 Figma Auto Layout）
+- 文件：`GloryAI_frontend/src/components/ReportPage.jsx`
+- 修改目标：将页面主结构从 Grid 全量改为 Flex，便于和 Figma Auto Layout 对齐。
+- 关键调整：
+  1. `main`: `grid` -> `flex flex-col`
+  2. 内容容器：`grid` -> `flex flex-col md:flex-row`
+  3. 左栏：`md:w-[35%]`
+  4. 右栏：`flex-1 flex flex-col`
+- 保留功能：mask 左右切换、Overlay 开关、Regenerate。

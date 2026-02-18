@@ -1,7 +1,7 @@
 ﻿import { Link } from "react-router-dom";
 import imgWoman from "../../assets/images/b594ed2ba6b71a21a695948f67b7f40e784b3613.png";
 import imgMan from "../../assets/images/8abbb633749a1443aec4861c818ba9c949b7aa24.png";
-import { TopNavPill } from "../components/TopNavPill";
+import { TopNavPill } from "../../components/TopNavPill";
 
 function MetricPill({ label, value, valueClass }) {
   return (

@@ -1,6 +1,6 @@
 ﻿import { Link } from "react-router-dom";
-import skinLabIcon from "../../assets/icons/SkinLabIcon.svg";
-import aboutIcon from "../../assets/icons/AboutIcon.svg";
+import skinLabIcon from "../assets/icons/SkinLabIcon.svg";
+import aboutIcon from "../assets/icons/AboutIcon.svg";
 
 function NavTab({ to, icon, label, active }) {
   return (

@@ -12,7 +12,7 @@ import uploadImgIcon from "../../assets/icons/UploadeImg.svg";
 import GreenPass from "../../assets/icons/GreenPass.svg";
 import RedFail from "../../assets/icons/RedFail.svg";
 import { useAnalysisFlow } from "../../features/analysis/AnalysisFlowContext";
-import { TopNavPill } from "../components/TopNavPill";
+import { TopNavPill } from "../../components/TopNavPill";
 
 const MAX_SIZE = 10 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
