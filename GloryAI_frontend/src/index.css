@@ -7,3 +7,17 @@
 .icon-chip-gradient {
   background-image: var(--icon-chip-gradient);
 }
+
+/* 只影响这个类 */
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #8c8c97; /* zinc-600 */
+  border-radius: 9999px;
+}

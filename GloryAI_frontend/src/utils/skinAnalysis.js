@@ -1,26 +1,26 @@
 const ISSUE_LABELS = {
-  wrinkle: "细纹",
-  acne: "痘痘",
-  moisture: "含水量",
-  oiliness: "油脂",
-  redness: "泛红",
-  pore: "毛孔",
-  texture: "肤质纹理",
-  radiance: "光泽",
-  age_spot: "色斑",
-  dark_circle_v2: "黑眼圈",
-  eye_bag: "眼袋",
-  firmness: "紧致度",
-  droopy_upper_eyelid: "上眼睑松弛",
-  droopy_lower_eyelid: "下眼睑松弛",
+  wrinkle: "wrinkle",
+  acne: "acne",
+  moisture: "moisture",
+  oiliness: "oiliness",
+  redness: "redness",
+  pore: "pore",
+  texture: "texture",
+  radiance: "radiance",
+  age_spot: "age spot",
+  dark_circle_v2: "dark circle",
+  eye_bag: "eye bag",
+  firmness: "firmness",
+  droopy_upper_eyelid: "upper eyelid laxity",
+  droopy_lower_eyelid: "lowerlower eyelid laxity",
 };
 
 const CORE_METRICS = ["wrinkle", "pore", "texture", "acne"];
 // 根据严重程度得分转换为风险等级
 function toRiskLevel(severity) {
-  if (severity >= 35) return "高";
-  if (severity >= 20) return "中";
-  return "低";
+  if (severity >= 35) return "High";
+  if (severity >= 20) return "Medium";
+  return "Low";
 }
 // 根据油脂和含水量得分推断皮肤类型
 function inferSkinType(oilinessScore, moistureScore) {
@@ -87,7 +87,8 @@ export function buildReport(rawData) {
     topIssues.length > 0 ? topIssues.map((item) => item.label).join("、") : "细纹、毛孔、纹理与痘痘";
 
   return {
-    summary: `[测试版] 你的皮肤整体状态稳定，当前优先关注${summaryTargets}。建议先做基础护理，再逐步增加功能型产品。`,
+    summary: `Your overall skin is perfect.
+While your moisture levels are excellent at 85%, our AI analysis has detected moderate concerns regarding pore texture and surface spots. To restore your natural glow, focus on targeted refinement and barrier protection.[测试版] 你的皮肤整体状态稳定，当前优先关注${summaryTargets}。建议先做基础护理，再逐步增加功能型产品。`,
     skinType: inferSkinType(oilinessScore, moistureScore),
     skinAge,
     overallScore,

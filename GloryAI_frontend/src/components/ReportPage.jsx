@@ -104,7 +104,7 @@ export default function ReportPage({
           </div>
         </section>
         {/* 这个section 用来做右侧的report详细内容 */}
-        <section className="m-4 flex h-full min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1 pb-28 md:m-4 md:pb-24">
+        <section className="m-4 flex h-full min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1 pb-28 md:m-4 md:pb-24 custom-scroll">
           {report ? <SkinReport report={report} /> : null}
           <RecommendationGrid title="Starter Kit Recommendations" items={recommendations?.beginner ?? []} />
           <RecommendationGrid title="Targeted Enhancement" items={recommendations?.intermediate ?? []} />

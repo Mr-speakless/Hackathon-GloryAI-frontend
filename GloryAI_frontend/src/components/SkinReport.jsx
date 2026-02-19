@@ -1,26 +1,26 @@
 import skinReportTitleIcon from "../assets/icons/SkinReportIcon.svg";
 
 function riskTone(risk) {
-  if (risk === "低") {
+  if (risk === "Low") {
     return {
       border: "border-emerald-300",
       text: "text-emerald-700",
-      bg: "bg-emerald-100/70",
+      bg: "bg-white/30",
     };
   }
 
-  if (risk === "中") {
+  if (risk === "Medium") {
     return {
       border: "border-amber-300",
       text: "text-amber-700",
-      bg: "bg-amber-100/75",
+      bg: "bg-white/30",
     };
   }
 
   return {
     border: "border-orange-300",
     text: "text-orange-700",
-    bg: "bg-orange-100/75",
+    bg: "bg-white/30",
   };
 }
 
@@ -67,7 +67,7 @@ function MetricPill({ label, value, risk }) {
 function fillToThree(items) {
   const filled = [...items];
   while (filled.length < 3) {
-    filled.push({ label: "-", value: "-", risk: "中" });
+    filled.push({ label: "-", value: "-", risk: "Medium" });
   }
   return filled.slice(0, 3);
 }
@@ -79,7 +79,7 @@ export default function SkinReport({ report }) {
   const statusLine = fillToThree(
     focusMetrics.map((metric) => ({
       label: metric.label,
-      value: metric.risk === "低" ? "Normal" : metric.risk === "中" ? "Medium" : "High",
+      value: metric.risk,
       risk: metric.risk,
     })),
   );
@@ -93,31 +93,40 @@ export default function SkinReport({ report }) {
   );
 
   return (
-    <section className="rounded-2xl border border-white/45 bg-violet-100/42 px-4 py-3 backdrop-blur-sm">
+    // 大外框
+    <section className="flex flex-col rounded-2xl border border-white/45 bg-violet-100/42 py-4 px-6 gap-4 backdrop-blur-sm">
+      {/* Icon + 文字 */}
       <div className="mb-2 flex items-center gap-2">
         <img src={skinReportTitleIcon} alt="Skin Report" className="h-6 w-6" />
-        <h2 className="text-4xl font-semibold text-zinc-700 md:text-5xl">Skin Report</h2>
+        <h2 className="text-xl font-semibold text-zinc-700 md:text-2xl">Skin Report</h2>
       </div>
-
-      <div className="grid gap-3 md:grid-cols-[190px_1fr]">
-        <GaugeCard score={report.overallScore} />
-
+      {/* 主体内容 */}
+      <div className="flex flex-row gap-3 md:gap-6">
+        {/* 左侧卡片 */}
+        <div className="flex flex-col gap-3">
+          <span className="rounded-full bg-white/75 px-3 py-1 text-[11px] text-zinc-500">Skin Age: {report.skinAge}</span>
+          <GaugeCard score={report.overallScore} />
+        </div>
+        {/* 右侧卡片 */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between gap-2">
-            <span className="rounded-full bg-white/75 px-3 py-1 text-[11px] text-zinc-500">Skin Age: {report.skinAge}</span>
+          {/* 字段的div */}
+          <div className="h-18 overflow-y-auto pr-2 custom-scroll">
+            {/* 这里的字段回头随机再做 */}
             <p className="text-sm leading-relaxed text-zinc-500">{report.summary}</p>
           </div>
-
-          <div className="grid gap-2 md:grid-cols-3">
+          {/* 卡片的div */}
+          <div className="flex flex-col gap-4 py-3">
+          <div className="flex flex-col gap-2 md:grid md:grid-cols-3">
             {statusLine.map((item, index) => (
               <MetricPill key={`status-${item.label}-${index}`} label={item.label} value={item.value} risk={item.risk} />
             ))}
           </div>
 
-          <div className="grid gap-2 md:grid-cols-3">
+          <div className="flex flex-col gap-2 md:grid md:grid-cols-3">
             {issueLine.map((item, index) => (
               <MetricPill key={`issue-${item.label}-${index}`} label={item.label} value={item.value} risk={item.risk} />
             ))}
+          </div>
           </div>
         </div>
       </div>

@@ -1253,3 +1253,11 @@ npm run dev -- --host
   3. 左栏：`md:w-[35%]`
   4. 右栏：`flex-1 flex flex-col`
 - 保留功能：mask 左右切换、Overlay 开关、Regenerate。
+
+## 42. 风险等级字段英文统一（Low/Medium/High）
+- 文件：`GloryAI_frontend/src/utils/skinAnalysis.js`
+  - `toRiskLevel` 返回值由 `高/中/低` 改为 `High/Medium/Low`（阈值逻辑不变）。
+- 文件：`GloryAI_frontend/src/components/SkinReport.jsx`
+  - `riskTone` 判断改为英文：`Low` / `Medium` / `High`。
+  - `fillToThree` 默认风险值改为 `Medium`。
+  - 指标展示值改为直接显示 `metric.risk`（不再混用 `Normal` 与中文）。
