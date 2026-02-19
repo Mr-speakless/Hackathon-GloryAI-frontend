@@ -9,7 +9,16 @@ from .services.youcam import (
     get_skin_analysis_task,
 )
 
-DEFAULT_ACTIONS = ["wrinkle", "pore", "texture", "acne"]
+DEFAULT_ACTIONS = [
+    "wrinkle",
+    "pore",
+    "texture",
+    "acne",
+    "moisture",
+    "oiliness",
+    "redness",
+    "dark_circle_v2",
+]
 
 
 @csrf_exempt
@@ -71,12 +80,14 @@ def skin_analysis_status(request, task_id: str):
             all_score = None
             skin_age = None
             resize_image_url = None
+            non_metric_types = {"all", "skin_age", "resize_image"}
 
             for item in out:
                 t = item.get("type")
-                if t in ("wrinkle", "pore", "texture", "acne"):
+                ui_score = item.get("ui_score")
+                if t and t not in non_metric_types and isinstance(ui_score, (int, float)):
                     skin_analysis[t] = {
-                        "ui_score": item.get("ui_score"),
+                        "ui_score": ui_score,
                         "raw_score": item.get("raw_score"),
                         "mask_url": (item.get("mask_urls") or [None])[0],
                     }

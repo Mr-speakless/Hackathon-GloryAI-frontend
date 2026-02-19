@@ -15,10 +15,11 @@ const ISSUE_LABELS = {
   droopy_lower_eyelid: "lowerlower eyelid laxity",
 };
 
-const CORE_METRICS = ["wrinkle", "pore", "texture", "acne"];
+// Candidate list for report cards: keep only metrics that have dedicated visual icons.
+const CORE_METRICS = ["wrinkle", "acne", "pore", "moisture", "oiliness", "redness", "dark_circle_v2"];
 // 根据严重程度得分转换为风险等级
 function toRiskLevel(severity) {
-  if (severity >= 35) return "High";
+  if (severity >= 25) return "High";
   if (severity >= 20) return "Medium";
   return "Low";
 }
@@ -35,6 +36,32 @@ function inferSkinType(oilinessScore, moistureScore) {
 // 构建皮肤分析报告
 export function buildReport(rawData) {
   const analysis = rawData.skin_analysis ?? {};
+  const isDev = typeof import.meta !== "undefined" && Boolean(import.meta.env?.DEV);
+
+  if (isDev) {
+    const diagnostics = CORE_METRICS.map((key) => {
+      const score = analysis?.[key]?.ui_score;
+      return {
+        key,
+        hasMetric: Object.prototype.hasOwnProperty.call(analysis, key),
+        uiScore: score,
+        isValidNumber: typeof score === "number" && Number.isFinite(score),
+      };
+    });
+
+    const invalidKeys = diagnostics.filter((item) => !item.isValidNumber).map((item) => item.key);
+    if (invalidKeys.length) {
+      console.warn("[skinAnalysis] Invalid or missing metric ui_score detected", {
+        invalidKeys,
+        diagnostics,
+        availableKeys: Object.keys(analysis),
+      });
+    } else {
+      console.info("[skinAnalysis] All CORE_METRICS have valid numeric ui_score", {
+        keys: CORE_METRICS,
+      });
+    }
+  }
 
   const entries = Object.entries(analysis).filter(([key, value]) => {
     return typeof value?.ui_score === "number";

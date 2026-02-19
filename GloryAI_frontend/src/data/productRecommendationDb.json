@@ -1,102 +1,82 @@
 [
   {
-    "brand": "CeraVe",
-    "name": "Hydrating Facial Cleanser",
-    "category": "Cleanser",
+    "brand": "The Ordinary",
+    "name": "GF 15% Serum for Visible Skin Repair and Wrinkles",
+    "price": 18,
+    "targetConcern": "Wrinkle",
     "level": "Basic",
-    "targetConcern": "Hydration",
-    "scoreMin": 60,
-    "scoreMax": 100,
-    "notes": "Supports moisture barrier"
+    "scoreRule": ">80",
+    "imageFile": "Wrinkle-1.png",
+    "productUrl": "https://www.sephora.com/product/the-ordinary-gf-15-solution-P514786?skuId=2828572&icid2=products%20grid:p514786:product"
   },
   {
-    "brand": "La Roche-Posay",
-    "name": "Toleriane Double Repair Moisturizer",
-    "category": "Moisturizer",
-    "level": "Basic",
-    "targetConcern": "Barrier Repair",
-    "scoreMin": 55,
-    "scoreMax": 100,
-    "notes": "Gentle daily repair"
-  },
-  {
-    "brand": "Neutrogena",
-    "name": "Hydro Boost Water Gel",
-    "category": "Moisturizer",
-    "level": "Basic",
-    "targetConcern": "Hydration",
-    "scoreMin": 50,
-    "scoreMax": 75,
-    "notes": "Lightweight hydration"
+    "brand": "Shiseido",
+    "name": "Ultimune Power Infusing Serum for Radiance & Wrinkles",
+    "price": 80,
+    "targetConcern": "Wrinkle",
+    "level": "Advanced",
+    "scoreRule": "<80",
+    "imageFile": "Wrinkle-2.png",
+    "productUrl": "https://www.sephora.com/product/ultimune-power-infusing-serum-P518065?skuId=2895340&icid2=products%20grid:p518065:product"
   },
   {
     "brand": "The Ordinary",
-    "name": "Niacinamide 10% + Zinc 1%",
-    "category": "Serum",
+    "name": "Sulfur 10% Powder-to-Cream",
+    "price": 9.9,
+    "targetConcern": "Acne",
     "level": "Basic",
-    "targetConcern": "Pores / Texture",
-    "scoreMin": 50,
-    "scoreMax": 80,
-    "notes": "Refines pores and balances oil"
+    "scoreRule": ">80",
+    "imageFile": "Acne-1.png",
+    "productUrl": "https://www.sephora.com/product/sulfur-10-powder-to-cream-concentrate-acne-spot-treatment-P518623?skuId=2913374&icid2=products%20grid:p518623:product"
+  },
+  {
+    "brand": "Sunday Riley",
+    "name": "Peacekeeper Azaleic and Salicylic Acid Acne Treatment Serum",
+    "price": 85,
+    "targetConcern": "Acne",
+    "level": "Advanced",
+    "scoreRule": "<80",
+    "imageFile": "Acne-2.png",
+    "productUrl": "https://www.sephora.com/product/peacekeeper-azaleic-salicylic-acid-acne-treatment-serum-P517688?skuId=2863934&icid2=products%20grid:p517688:product"
   },
   {
     "brand": "Paula’s Choice",
     "name": "2% BHA Liquid Exfoliant",
-    "category": "Exfoliant",
-    "level": "Advanced",
-    "targetConcern": "Texture / Pores",
-    "scoreMin": 40,
-    "scoreMax": 70,
-    "notes": "Deep pore exfoliation"
+    "price": 15,
+    "targetConcern": "Pore",
+    "level": "Basic",
+    "scoreRule": ">80",
+    "imageFile": "Pore-1.png",
+    "productUrl": "https://www.sephora.com/product/paula-s-choice-mini-skin-perfecting-2-bha-liquid-exfoliant-P469503?skuId=2421394&icid2=products%20grid:p469503:product"
   },
   {
-    "brand": "SkinCeuticals",
-    "name": "CE Ferulic",
-    "category": "Serum",
+    "brand": "SK-II",
+    "name": "Aging Skin Facial Treatment Essence with Antioxidants",
+    "price": 325,
+    "targetConcern": "Pore",
     "level": "Advanced",
-    "targetConcern": "Pigmentation / Anti-aging",
-    "scoreMin": 65,
-    "scoreMax": 100,
-    "notes": "High-potency antioxidant"
+    "scoreRule": "<80",
+    "imageFile": "Pore-2.png",
+    "productUrl": "https://www.sephora.com/product/facial-treatment-essence-P375849?skuId=1592724&icid2=products%20grid:p375849:product"
   },
   {
-    "brand": "Drunk Elephant",
-    "name": "T.L.C. Framboos Glycolic Night Serum",
-    "category": "Serum",
-    "level": "Advanced",
-    "targetConcern": "Texture / Uneven Tone",
-    "scoreMin": 45,
-    "scoreMax": 75,
-    "notes": "Resurfacing treatment"
+    "brand": "Topicals",
+    "name": "Faded Brightening Serum for Dark Spots and Discoloration",
+    "price": 18,
+    "targetConcern": "Texture",
+    "level": "Basic",
+    "scoreRule": ">80",
+    "imageFile": "Texture-1.png",
+    "productUrl": "https://www.sephora.com/product/faded-brightening-clearing-serum-for-dark-spots-discoloration-P515090?skuId=2842748&icid2=products%20grid:p515090:product"
   },
   {
     "brand": "Estée Lauder",
     "name": "Advanced Night Repair",
-    "category": "Serum",
+    "price": 130,
+    "targetConcern": "Texture",
     "level": "Advanced",
-    "targetConcern": "Barrier / Repair",
-    "scoreMin": 50,
-    "scoreMax": 85,
-    "notes": "Overnight recovery serum"
-  },
-  {
-    "brand": "EltaMD",
-    "name": "UV Clear Broad-Spectrum SPF 46",
-    "category": "Sunscreen",
-    "level": "Basic",
-    "targetConcern": "Protection / Sensitivity",
-    "scoreMin": 60,
-    "scoreMax": 100,
-    "notes": "Calms acne-prone skin"
-  },
-  {
-    "brand": "Clinique",
-    "name": "Moisture Surge 100H Auto-Replenishing Hydrator",
-    "category": "Moisturizer",
-    "level": "Basic",
-    "targetConcern": "Hydration",
-    "scoreMin": 65,
-    "scoreMax": 100,
-    "notes": "Long-lasting hydration"
+    "scoreRule": "<80",
+    "imageFile": "Texture-2.png",
+    "productUrl": "https://www.sephora.com/product/estee-lauder-advanced-night-repair-synchronized-multi-recovery-complex-P461159?skuId=2379683&icid2=products%20grid:p461159:product"
   }
 ]

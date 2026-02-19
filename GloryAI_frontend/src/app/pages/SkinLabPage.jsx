@@ -100,7 +100,7 @@ export function SkinLabPage() {
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
 
               {/* LEFT BLUE DIV */}
-              <div className="flex flex-col items-center justify-center text-center p-4">
+              <div className="flex flex-col items-center text-center p-4 gap-4">
 
                 <img
                   src={imgFaceGood}

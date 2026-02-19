@@ -1,96 +1,146 @@
 import skinReportTitleIcon from "../assets/icons/SkinReportIcon.svg";
+import wrinkleIcon from "../assets/icons/Wrinkle.svg";
+import acneIcon from "../assets/icons/Acne.svg";
+import poresIcon from "../assets/icons/Pores.svg";
+import moistureIcon from "../assets/icons/Moisture.svg";
+import oilinessIcon from "../assets/icons/Oilness.svg";
+import rednessIcon from "../assets/icons/Redness.svg";
+import darkCircleIcon from "../assets/icons/DarkCircle.svg";
 
 function riskTone(risk) {
   if (risk === "Low") {
     return {
-      border: "border-emerald-300",
-      text: "text-emerald-700",
-      bg: "bg-white/30",
+      border: "border-white/55",
+      text: "text-lime-500",
+      bg: "bg-white/35",
     };
   }
 
-  if (risk === "Medium") {
+  if (risk === "Medium" || risk === "High") {
     return {
-      border: "border-amber-300",
-      text: "text-amber-700",
+      border: "border-orange-400",
+      text: "text-orange-500",
       bg: "bg-white/30",
     };
   }
 
   return {
-    border: "border-orange-300",
-    text: "text-orange-700",
+    border: "border-white/50",
+    text: "text-zinc-500",
     bg: "bg-white/30",
   };
 }
 
 function GaugeCard({ score }) {
   const safeScore = Number.isFinite(score) ? Math.max(0, Math.min(100, Math.round(score))) : 0;
-  const degree = Math.round((safeScore / 100) * 180);
 
   return (
-    <article className="rounded-2xl bg-white/78 p-2.5 shadow-sm">
-      <p className="text-center text-[11px] text-zinc-500">Overall Score</p>
-      <div className="relative mx-auto mt-1 h-24 w-44 overflow-hidden">
-        <div
-          className="absolute left-1/2 top-full h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{
-            background: `conic-gradient(from 180deg, #b2a4f0 0deg ${degree}deg, #d9d8e2 ${degree}deg 180deg, transparent 180deg 360deg)`,
-          }}
-          aria-hidden="true"
-        />
-        <div className="absolute left-1/2 top-full h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/95" aria-hidden="true" />
-        <div className="absolute inset-x-0 bottom-0 text-center">
-          <p className="text-4xl font-semibold text-zinc-700">{safeScore}</p>
-          <p className="text-[11px] text-zinc-500">Health Skin</p>
-        </div>
-      </div>
-      <div className="-mt-1 flex items-center justify-between px-3 text-[10px] text-zinc-500">
-        <span>0</span>
-        <span>100</span>
-      </div>
+    <article className="rounded-2xl bg-white/78 px-10 py-8 shadow-sm items-center justify-center flex flex-col  gap-2">
+      <div className="text-[11px] text-zinc-500">Overall Score</div>
+      <div className="text-green-500 text-6xl font-semibold ">{safeScore}</div>
+      
     </article>
   );
 }
 
-function MetricPill({ label, value, risk }) {
-  const tone = riskTone(risk);
+const CARD_LABELS = {
+  wrinkle: "Wrinkle",
+  acne: "Acne",
+  pore: "Pores",
+  moisture: "Moisture",
+  oiliness: "Oiliness",
+  redness: "Redness",
+  dark_circle_v2: "Dark Circle",
+};
 
-  return (
-    <article className={`flex items-center justify-between rounded-xl border px-3 py-2 ${tone.border} ${tone.bg}`}>
-      <span className="text-sm text-zinc-600">{label}</span>
-      <span className={`text-sm font-semibold ${tone.text}`}>{value}</span>
-    </article>
-  );
-}
+const CARD_ICONS = {
+  wrinkle: wrinkleIcon,
+  acne: acneIcon,
+  pore: poresIcon,
+  moisture: moistureIcon,
+  oiliness: oilinessIcon,
+  redness: rednessIcon,
+  dark_circle_v2: darkCircleIcon,
+};
 
-function fillToThree(items) {
-  const filled = [...items];
-  while (filled.length < 3) {
-    filled.push({ label: "-", value: "-", risk: "Medium" });
+function toRiskText(key, risk) {
+  if (risk === "Low") {
+    return key === "acne" ? "Good" : "Low Risk";
   }
-  return filled.slice(0, 3);
+  if (risk === "Medium") return "Medium Risk";
+  if (risk === "High") return "High Risk";
+  return "-";
+}
+
+function toCardMetric(metric) {
+  return {
+    key: metric.key,
+    label: CARD_LABELS[metric.key] ?? metric.label ?? "-",
+    risk: metric.risk ?? "-",
+    value: toRiskText(metric.key, metric.risk),
+    severity: typeof metric.severity === "number" ? metric.severity : null,
+  };
+}
+
+function splitBestWorst(focusMetrics) {
+  const pool = focusMetrics
+    .filter((metric) => typeof metric?.severity === "number")
+    .map((metric) => toCardMetric(metric));
+
+  if (!pool.length) {
+    return { bestLine: [], worstLine: [] };
+  }
+
+  const asc = [...pool].sort((a, b) => a.severity - b.severity);
+  const desc = [...pool].sort((a, b) => b.severity - a.severity);
+  const best = asc.slice(0, Math.min(2, asc.length));
+  const worst = desc.slice(0, Math.min(2, desc.length));
+
+  if (pool.length < 4) {
+    const seen = new Set();
+    const merged = [];
+
+    for (const item of [...best, ...worst]) {
+      if (seen.has(item.key)) continue;
+      seen.add(item.key);
+      merged.push(item);
+    }
+
+    return {
+      bestLine: merged.slice(0, 2),
+      worstLine: merged.slice(2),
+    };
+  }
+
+  return {
+    bestLine: best,
+    worstLine: worst,
+  };
+}
+
+function MetricPill({ item }) {
+  const { label, value, risk, key } = item;
+  const tone = riskTone(risk);
+  const iconSrc = CARD_ICONS[key];
+
+  return (
+    <article className={`flex items-center gap-3 rounded-[32px] border px-4 py-2 ${tone.border} ${tone.bg}`}>
+      <div className="grid h-6 w-6 shrink-0 place-items-center">
+        {iconSrc ? <img src={iconSrc} alt={label} className="h-6 w-6 opacity-70" /> : null}
+      </div>
+      <p className="text-lg font-semibold leading-tight text-zinc-500">
+        {label}: <span className={tone.text}>{value}</span>
+      </p>
+    </article>
+  );
 }
 
 export default function SkinReport({ report }) {
-  const focusMetrics = Array.isArray(report.focusMetrics) ? report.focusMetrics : [];
-  const topIssues = Array.isArray(report.topIssues) ? report.topIssues : [];
-
-  const statusLine = fillToThree(
-    focusMetrics.map((metric) => ({
-      label: metric.label,
-      value: metric.risk,
-      risk: metric.risk,
-    })),
-  );
-
-  const issueLine = fillToThree(
-    topIssues.map((issue) => ({
-      label: issue.label,
-      value: issue.risk,
-      risk: issue.risk,
-    })),
-  );
+  const metricKeys = Object.keys(CARD_ICONS);
+  const focusMetrics = Array.isArray(report.focusMetrics)
+    ? report.focusMetrics.filter((metric) => metricKeys.includes(metric?.key))
+    : [];
+  const { bestLine, worstLine } = splitBestWorst(focusMetrics);
 
   return (
     // 大外框
@@ -115,18 +165,21 @@ export default function SkinReport({ report }) {
             <p className="text-sm leading-relaxed text-zinc-500">{report.summary}</p>
           </div>
           {/* 卡片的div */}
-          <div className="flex flex-col gap-4 py-3">
-          <div className="flex flex-col gap-2 md:grid md:grid-cols-3">
-            {statusLine.map((item, index) => (
-              <MetricPill key={`status-${item.label}-${index}`} label={item.label} value={item.value} risk={item.risk} />
+          <div className="flex flex-col gap-2 py-3">
+          <div className="flex flex-col gap-2 md:grid md:grid-cols-2">
+            {/* 这里显示 用户表现最好的的两个指标 并配上对应的icon icon我更新在了assests中 */}
+            {bestLine.map((item, index) => (
+              <MetricPill key={`status-${item.key}-${index}`} item={item} />
             ))}
           </div>
-
-          <div className="flex flex-col gap-2 md:grid md:grid-cols-3">
-            {issueLine.map((item, index) => (
-              <MetricPill key={`issue-${item.label}-${index}`} label={item.label} value={item.value} risk={item.risk} />
-            ))}
-          </div>
+            {/* 这里显示 用户表现最差的两个指标 并配上对应的icon icon我更新在了assests中*/}
+          {worstLine.length ? (
+            <div className="flex flex-col gap-3 md:grid md:grid-cols-2">
+              {worstLine.map((item, index) => (
+                <MetricPill key={`issue-${item.key}-${index}`} item={item} />
+              ))}
+            </div>
+          ) : null}
           </div>
         </div>
       </div>

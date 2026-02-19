@@ -68,7 +68,7 @@ export default function ReportPage({
                   &lt;
                 </button>
                 <span className="text-base md:text-lg">
-                  皮肤检测分析：{currentMaskKey ?? "暂无"}
+                Analyze：{currentMaskKey ?? "暂无"}
                   {typeof currentMaskScore === "number" ? ` · ${currentMaskScore}` : ""}
                 </span>
                 <button
