@@ -112,6 +112,7 @@ export default function ReportPage({
         <section className="m-4 flex h-full min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1 pb-28 md:m-4 md:pb-24 custom-scroll">
           {report ? <SkinReport report={report} /> : null}
           <RecommendationGrid title="Starter Kit Recommendations" items={recommendedItems} />
+          
           {/* 底部 restart按钮 */}
           <div className="flex flex-1 items-center justify-center gap-8 rounded-xl border border-white/35 bg-white/22 px-4 py-3 text-lg text-zinc-500">
             <button type="button" className="transition-colors hover:text-zinc-700" onClick={onReset}>
