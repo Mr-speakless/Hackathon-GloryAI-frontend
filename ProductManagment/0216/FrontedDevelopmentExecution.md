@@ -1296,3 +1296,9 @@ npm run dev -- --host
 
 ### 43.4 备注
 - 当前执行环境无法运行 `npm`，未在此环境完成 `vite` 实机验证。
+
+## 44. HomePage 两处需求执行
+- 文件：`GloryAI_frontend/src/app/pages/HomePage.jsx`
+1. 背景装饰：接入 `LogoBackground.svg` 并以绝对定位叠加在页面背景层。
+2. 品牌位：将标题左侧占位方块替换为 `GloryAI_Logo.svg`。
+- 说明：仅改这两处，其他布局与交互保持不变。

@@ -1,7 +1,9 @@
-﻿import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import imgWoman from "../../assets/images/b594ed2ba6b71a21a695948f67b7f40e784b3613.png";
 import imgMan from "../../assets/images/8abbb633749a1443aec4861c818ba9c949b7aa24.png";
 import { TopNavPill } from "../../components/TopNavPill";
+import gloryAiLogo from "../../assets/icons/GloryAI_Logo.svg";
+import logoBackground from "../../assets/icons/LogoBackground.svg";
 
 function MetricPill({ label, value, valueClass }) {
   return (
@@ -15,7 +17,14 @@ function MetricPill({ label, value, valueClass }) {
 export function HomePage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#c7c4f1] via-[#e5daca] to-[#f1ece3] px-6 py-12 text-zinc-900 md:px-14">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-10">
+      <img
+        src={logoBackground}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-20"
+      />
+
+      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-10">
         <div className="flex justify-center">
           <div className="flex w-full max-w-md justify-center">
             <TopNavPill activeTab="about" />
@@ -25,7 +34,7 @@ export function HomePage() {
         <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <section className="space-y-6">
             <div className="flex items-center gap-4">
-              <div className="h-10 w-10 bg-zinc-900" />
+              <img src={gloryAiLogo} alt="GloryAI logo" className="h-10 w-10" />
               <p className="text-3xl font-bold">GLory.AI</p>
             </div>
 
