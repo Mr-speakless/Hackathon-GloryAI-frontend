@@ -1,0 +1,102 @@
+[
+  {
+    "brand": "CeraVe",
+    "name": "Hydrating Facial Cleanser",
+    "category": "Cleanser",
+    "level": "Basic",
+    "targetConcern": "Hydration",
+    "scoreMin": 60,
+    "scoreMax": 100,
+    "notes": "Supports moisture barrier"
+  },
+  {
+    "brand": "La Roche-Posay",
+    "name": "Toleriane Double Repair Moisturizer",
+    "category": "Moisturizer",
+    "level": "Basic",
+    "targetConcern": "Barrier Repair",
+    "scoreMin": 55,
+    "scoreMax": 100,
+    "notes": "Gentle daily repair"
+  },
+  {
+    "brand": "Neutrogena",
+    "name": "Hydro Boost Water Gel",
+    "category": "Moisturizer",
+    "level": "Basic",
+    "targetConcern": "Hydration",
+    "scoreMin": 50,
+    "scoreMax": 75,
+    "notes": "Lightweight hydration"
+  },
+  {
+    "brand": "The Ordinary",
+    "name": "Niacinamide 10% + Zinc 1%",
+    "category": "Serum",
+    "level": "Basic",
+    "targetConcern": "Pores / Texture",
+    "scoreMin": 50,
+    "scoreMax": 80,
+    "notes": "Refines pores and balances oil"
+  },
+  {
+    "brand": "Paula’s Choice",
+    "name": "2% BHA Liquid Exfoliant",
+    "category": "Exfoliant",
+    "level": "Advanced",
+    "targetConcern": "Texture / Pores",
+    "scoreMin": 40,
+    "scoreMax": 70,
+    "notes": "Deep pore exfoliation"
+  },
+  {
+    "brand": "SkinCeuticals",
+    "name": "CE Ferulic",
+    "category": "Serum",
+    "level": "Advanced",
+    "targetConcern": "Pigmentation / Anti-aging",
+    "scoreMin": 65,
+    "scoreMax": 100,
+    "notes": "High-potency antioxidant"
+  },
+  {
+    "brand": "Drunk Elephant",
+    "name": "T.L.C. Framboos Glycolic Night Serum",
+    "category": "Serum",
+    "level": "Advanced",
+    "targetConcern": "Texture / Uneven Tone",
+    "scoreMin": 45,
+    "scoreMax": 75,
+    "notes": "Resurfacing treatment"
+  },
+  {
+    "brand": "Estée Lauder",
+    "name": "Advanced Night Repair",
+    "category": "Serum",
+    "level": "Advanced",
+    "targetConcern": "Barrier / Repair",
+    "scoreMin": 50,
+    "scoreMax": 85,
+    "notes": "Overnight recovery serum"
+  },
+  {
+    "brand": "EltaMD",
+    "name": "UV Clear Broad-Spectrum SPF 46",
+    "category": "Sunscreen",
+    "level": "Basic",
+    "targetConcern": "Protection / Sensitivity",
+    "scoreMin": 60,
+    "scoreMax": 100,
+    "notes": "Calms acne-prone skin"
+  },
+  {
+    "brand": "Clinique",
+    "name": "Moisture Surge 100H Auto-Replenishing Hydrator",
+    "category": "Moisturizer",
+    "level": "Basic",
+    "targetConcern": "Hydration",
+    "scoreMin": 65,
+    "scoreMax": 100,
+    "notes": "Long-lasting hydration"
+  }
+]

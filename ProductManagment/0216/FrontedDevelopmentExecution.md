@@ -1261,3 +1261,38 @@ npm run dev -- --host
   - `riskTone` 判断改为英文：`Low` / `Medium` / `High`。
   - `fillToThree` 默认风险值改为 `Medium`。
   - 指标展示值改为直接显示 `metric.risk`（不再混用 `Normal` 与中文）。
+
+## 43. RecommendationGrid XLSX 自动匹配实现（最快路径）
+
+### 43.1 本轮目标
+- 基于 `AI_Skin_Product_Recommendation_Database.xlsx` 自动推荐 3 个产品。
+- 推荐卡片仅展示产品名。
+- 采用“xlsx 先转 json，再前端匹配”的最快实现。
+
+### 43.2 实际执行动作
+1. 新增导出脚本：`scripts/export_recommendation_db.py`
+   - 读取根目录 xlsx。
+   - 映射并导出到：`GloryAI_frontend/src/data/productRecommendationDb.json`。
+2. 执行脚本并生成数据文件。
+   - 结果：导出 10 条产品记录。
+3. 新增推荐算法：`GloryAI_frontend/src/utils/recommendProducts.js`
+   - 导出 `getTopRecommendations(overallScore, db, limit = 3)`。
+   - 规则：命中区间优先 -> 区间宽度更小优先 -> 中点距离更近优先 -> 边界距离补齐。
+4. 改造 `GloryAI_frontend/src/components/ReportPage.jsx`
+   - 引入 `productRecommendationDb.json` + `getTopRecommendations`。
+   - 根据 `report.overallScore` 计算推荐 3 条。
+   - 传给 `RecommendationGrid`。
+5. 改造 `GloryAI_frontend/src/components/RecommendationGrid.jsx`
+   - `ProductCard` 仅保留 `item.name`。
+   - 去除图片、brand、description 字段展示。
+   - 空数据时显示 `No recommendation data.`。
+
+### 43.3 验收点（待你本地回填）
+- TC-RC-01：导出 json 字段正确。
+- TC-RC-02：分数 77 返回稳定 3 条推荐。
+- TC-RC-03：分数边界 0/50/100 无报错。
+- TC-RC-04：无效分数返回前 3 条兜底。
+- TC-RC-05：卡片仅显示产品名。
+
+### 43.4 备注
+- 当前执行环境无法运行 `npm`，未在此环境完成 `vite` 实机验证。

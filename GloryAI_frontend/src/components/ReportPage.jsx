@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import RecommendationGrid from "./RecommendationGrid";
 import SkinReport from "./SkinReport";
 import { TopNavPill } from "./TopNavPill";
+import productRecommendationDb from "../data/productRecommendationDb.json";
+import { getTopRecommendations } from "../utils/recommendProducts";
 
 export default function ReportPage({
   uploadedImageUrl,
@@ -9,7 +11,6 @@ export default function ReportPage({
   onPrevMask,
   onNextMask,
   report,
-  recommendations,
   onReset,
   currentMaskKey,
   currentMaskScore,
@@ -19,6 +20,10 @@ export default function ReportPage({
 
   const interactiveClass =
     "transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.18)] active:translate-y-0 active:shadow-[0_2px_6px_rgba(0,0,0,0.14)]";
+  const recommendedItems = useMemo(
+    () => getTopRecommendations(report?.overallScore, productRecommendationDb, 3),
+    [report?.overallScore],
+  );
 
   return (
     //这个main 负责撑满屏幕 并应用渐变背景
@@ -106,13 +111,9 @@ export default function ReportPage({
         {/* 这个section 用来做右侧的report详细内容 */}
         <section className="m-4 flex h-full min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1 pb-28 md:m-4 md:pb-24 custom-scroll">
           {report ? <SkinReport report={report} /> : null}
-          <RecommendationGrid title="Starter Kit Recommendations" items={recommendations?.beginner ?? []} />
-          <RecommendationGrid title="Targeted Enhancement" items={recommendations?.intermediate ?? []} />
-
-          <div className="flex items-center justify-center gap-8 rounded-xl border border-white/35 bg-white/22 px-4 py-3 text-lg text-zinc-500">
-            <button type="button" className="transition-colors hover:text-zinc-700">
-              Read Full Report  ›
-            </button>
+          <RecommendationGrid title="Starter Kit Recommendations" items={recommendedItems} />
+          {/* 底部 restart按钮 */}
+          <div className="flex flex-1 items-center justify-center gap-8 rounded-xl border border-white/35 bg-white/22 px-4 py-3 text-lg text-zinc-500">
             <button type="button" className="transition-colors hover:text-zinc-700" onClick={onReset}>
               Regenerate  ›
             </button>
