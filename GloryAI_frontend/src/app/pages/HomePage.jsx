@@ -31,9 +31,9 @@ export function HomePage() {
           </div>
         </div>
 
-        <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid pt-20 gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <section className="space-y-6">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 mt-8">
               <img src={gloryAiLogo} alt="GloryAI logo" className="h-10 w-10" />
               <p className="text-3xl font-bold">GLory.AI</p>
             </div>
@@ -58,7 +58,7 @@ export function HomePage() {
           </section>
 
           <section className="space-y-6">
-            <div className="relative mx-auto h-[380px] w-full max-w-[520px]">
+            <div className="relative mx-auto h-[380px] w-full max-w-[520px] ">
               <img
                 src={imgMan}
                 alt="skin sample male"
