@@ -38,10 +38,10 @@ export function HomePage() {
               <p className="text-3xl font-bold">GLory.AI</p>
             </div>
 
-            <h1 className="max-w-3xl text-4xl font-bold leading-tight md:text-6xl">
-              Decode Your Skin.
+            <h1 className="max-w-3xl text-4xl leading-tight md:text-6xl">
+              <span className="font-display">Decode Your Skin.</span>
               <br />
-              Restore Your Glow.
+              <span className="font-display">Restore Your Glow.</span>
             </h1>
 
             <p className="max-w-2xl text-sm text-zinc-700/80 md:text-base">
@@ -70,8 +70,8 @@ export function HomePage() {
                 className="absolute bottom-0 left-[18%] z-20 h-[270px] w-[230px] rounded-2xl object-cover shadow-xl md:h-[310px] md:w-[260px]"
               />
             </div>
-
-            <div className="mx-auto grid w-full max-w-[500px] grid-cols-[1fr_auto] items-center gap-3">
+              {/*  我想让以下这个div向右对齐父级 */}
+            <div className="ml-auto grid w-full max-w-[400px] grid-cols-[1fr_auto] items-center gap-20 m-3">
               <div className="rounded-full border border-white/70 bg-white/20 px-4 py-2 text-center text-sm backdrop-blur-sm">
                 Scanning... &gt;&gt; 100%
               </div>

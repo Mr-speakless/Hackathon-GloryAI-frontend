@@ -163,7 +163,7 @@ export function SkinLabPage() {
                   <img src={uploadImgIcon} alt="upload" className="h-48 w-48 opacity-70" />
                 </div>
 
-                <div className="self-stretch h-14 text-center justify-start text-gray-500 opacity-50 text-xs font-normal font-['Helvetica']">
+                <div className="self-stretch h-14 text-center justify-start text-gray-500 opacity-50 text-xs font-normal">
                   Dimension: Short side ≥ 480px, Long side ≤ 4096px<br />Format: JPG, JPEG, or PNG<br />Max Size: 10MB<br />
                 </div>
 
