@@ -1,3 +1,4 @@
+import { useState } from "react";
 import skinReportTitleIcon from "../assets/icons/SkinReportIcon.svg";
 import wrinkleIcon from "../assets/icons/Wrinkle.svg";
 import acneIcon from "../assets/icons/Acne.svg";
@@ -10,24 +11,24 @@ import darkCircleIcon from "../assets/icons/DarkCircle.svg";
 function riskTone(risk) {
   if (risk === "Low") {
     return {
-      border: "border-white/55",
-      text: "text-lime-500",
-      bg: "bg-white/35",
+      accentBorder: "border-lime-500",
+      accentText: "text-lime-500",
+      iconFilter: "brightness(0) saturate(100%) invert(67%) sepia(63%) saturate(507%) hue-rotate(55deg) brightness(97%) contrast(88%)",
     };
   }
 
   if (risk === "Medium" || risk === "High") {
     return {
-      border: "border-orange-400",
-      text: "text-orange-500",
-      bg: "bg-white/30",
+      accentBorder: "border-orange-400",
+      accentText: "text-orange-500",
+      iconFilter: "brightness(0) saturate(100%) invert(61%) sepia(59%) saturate(2942%) hue-rotate(348deg) brightness(103%) contrast(101%)",
     };
   }
 
   return {
-    border: "border-white/50",
-    text: "text-zinc-500",
-    bg: "bg-white/30",
+    accentBorder: "border-white/50",
+    accentText: "text-zinc-500",
+    iconFilter: "grayscale(100%)",
   };
 }
 
@@ -35,10 +36,9 @@ function GaugeCard({ score }) {
   const safeScore = Number.isFinite(score) ? Math.max(0, Math.min(100, Math.round(score))) : 0;
 
   return (
-    <article className="rounded-2xl bg-white/78 px-10 py-8 shadow-sm items-center justify-center flex flex-col  gap-2">
+    <article className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-white/78 px-10 py-8 shadow-sm">
       <div className="text-[11px] text-zinc-500">Overall Score</div>
-      <div className="text-green-500 text-6xl font-semibold ">{safeScore}</div>
-      
+      <div className="text-6xl font-semibold text-green-500">{safeScore}</div>
     </article>
   );
 }
@@ -122,16 +122,38 @@ function MetricPill({ item }) {
   const { label, value, risk, key } = item;
   const tone = riskTone(risk);
   const iconSrc = CARD_ICONS[key];
+  const [isHovering, setIsHovering] = useState(false);
+  const [isPressing, setIsPressing] = useState(false);
+  const borderClass = isPressing ? tone.accentBorder : "border-white/55";
+  const backgroundClass = isPressing ? "bg-white/72" : "bg-white/35";
+  const valueClass = isHovering || isPressing ? tone.accentText : "text-zinc-400";
+  const labelClass = isHovering || isPressing ? tone.accentText : "text-zinc-500";
+  const iconStyle = isHovering || isPressing
+    ? { filter: tone.iconFilter }
+    : { filter: "grayscale(100%) brightness(0.65)", opacity: 0.7 };
 
   return (
-    <article className={`flex items-center gap-3 rounded-[32px] border px-4 py-2 ${tone.border} ${tone.bg}`}>
+    <button
+      type="button"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => {
+        setIsHovering(false);
+        setIsPressing(false);
+      }}
+      onMouseDown={() => setIsPressing(true)}
+      onMouseUp={() => setIsPressing(false)}
+      onBlur={() => setIsPressing(false)}
+      className={`flex w-full items-center gap-3 rounded-[32px] border px-4 py-2 text-left transition ${borderClass} ${backgroundClass} ${
+        isPressing ? "shadow-[0_6px_18px_rgba(0,0,0,0.08)]" : ""
+      }`}
+    >
       <div className="grid h-6 w-6 shrink-0 place-items-center">
-        {iconSrc ? <img src={iconSrc} alt={label} className="h-6 w-6 opacity-70" /> : null}
+        {iconSrc ? <img src={iconSrc} alt={label} className="h-6 w-6" style={iconStyle} /> : null}
       </div>
-      <p className="text-lg font-semibold leading-tight text-zinc-500">
-        {label}: <span className={tone.text}>{value}</span>
+      <p className={`text-lg font-semibold leading-tight transition-colors ${labelClass}`}>
+        {label}: <span className={valueClass}>{value}</span>
       </p>
-    </article>
+    </button>
   );
 }
 
@@ -143,43 +165,39 @@ export default function SkinReport({ report }) {
   const { bestLine, worstLine } = splitBestWorst(focusMetrics);
 
   return (
-    // 大外框
-    <section className="flex flex-col rounded-2xl border border-white/45 bg-violet-100/42 py-4 px-6 gap-4 backdrop-blur-sm">
-      {/* Icon + 文字 */}
+    <section className="flex flex-col gap-4 rounded-2xl border border-white/45 bg-violet-100/42 px-6 py-4 backdrop-blur-sm">
       <div className="mb-2 flex items-center gap-2">
         <img src={skinReportTitleIcon} alt="Skin Report" className="h-6 w-6" />
         <h2 className="text-xl font-semibold text-zinc-700 md:text-2xl">Skin Report</h2>
       </div>
-      {/* 主体内容 */}
+
       <div className="flex flex-row gap-3 md:gap-6">
-        {/* 左侧卡片 */}
         <div className="flex flex-col gap-3">
           <span className="rounded-full bg-white/75 px-3 py-1 text-[11px] text-zinc-500">Skin Age: {report.skinAge}</span>
           <GaugeCard score={report.overallScore} />
         </div>
-        {/* 右侧卡片 */}
+
         <div className="space-y-2">
-          {/* 字段的div */}
-          <div className="h-18 overflow-y-auto pr-2 custom-scroll">
-            {/* 这里的字段回头随机再做 */}
+          <div className="custom-scroll h-18 overflow-y-auto pr-2">
             <p className="text-sm leading-relaxed text-zinc-500">{report.summary}</p>
           </div>
-          {/* 卡片的div */}
+
           <div className="flex flex-col gap-2 py-3">
-          <div className="flex flex-col gap-2 md:grid md:grid-cols-2">
-            {/* 这里显示 用户表现最好的的两个指标 并配上对应的icon icon我更新在了assests中 */}
-            {bestLine.map((item, index) => (
-              <MetricPill key={`status-${item.key}-${index}`} item={item} />
-            ))}
-          </div>
-            {/* 这里显示 用户表现最差的两个指标 并配上对应的icon icon我更新在了assests中*/}
-          {worstLine.length ? (
-            <div className="flex flex-col gap-3 md:grid md:grid-cols-2">
-              {worstLine.map((item, index) => (
-                <MetricPill key={`issue-${item.key}-${index}`} item={item} />
-              ))}
+            <div className="flex flex-col gap-2 md:grid md:grid-cols-2">
+              {bestLine.map((item, index) => {
+                const cardId = `best-${item.key}-${index}`;
+                return <MetricPill key={cardId} item={item} />;
+              })}
             </div>
-          ) : null}
+
+            {worstLine.length ? (
+              <div className="flex flex-col gap-3 md:grid md:grid-cols-2">
+                {worstLine.map((item, index) => {
+                  const cardId = `worst-${item.key}-${index}`;
+                  return <MetricPill key={cardId} item={item} />;
+                })}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

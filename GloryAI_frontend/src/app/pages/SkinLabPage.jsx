@@ -48,7 +48,6 @@ function StepRow({ icon, text }) {
 export function SkinLabPage() {
   const navigate = useNavigate();
   const { error, queueAnalysis, setError, runQueuedAnalysis, isAnalyzing, pendingFile, analysisData } = useAnalysisFlow();
-  const [previewUrl, setPreviewUrl] = useState("");
   const [localError, setLocalError] = useState("");
   const [showAnalyzingCard, setShowAnalyzingCard] = useState(false);
   const analysisStartedRef = useRef(false);
@@ -58,12 +57,6 @@ export function SkinLabPage() {
   useEffect(() => {
     runQueuedAnalysisRef.current = runQueuedAnalysis;
   }, [runQueuedAnalysis]);
-
-  useEffect(() => {
-    return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-    };
-  }, [previewUrl]);
 
   useEffect(() => {
     if (!showAnalyzingCard) return;
@@ -102,16 +95,10 @@ export function SkinLabPage() {
     const msg = validateFile(nextFile);
     setLocalError(msg);
     if (msg) {
-      setPreviewUrl("");
       return;
     }
 
     setError("");
-    setPreviewUrl((prev) => {
-      if (prev) URL.revokeObjectURL(prev);
-      return URL.createObjectURL(nextFile);
-    });
-
     queueAnalysis(nextFile);
     setShowAnalyzingCard(true);
   }
@@ -172,13 +159,9 @@ export function SkinLabPage() {
           <section className="w-full rounded-2xl bg-white/35 p-5 backdrop-blur-sm lg:w-1/2">
             <div className="grid h-full place-items-center rounded-2xl border border-dashed border-zinc-500/40 bg-white/25 p-6 text-center">
               <div className="w-full max-w-md space-y-4">
-                {previewUrl ? (
-                  <img src={previewUrl} alt="preview" className="mx-auto h-[210px] w-[220px] rounded-lg object-cover shadow" />
-                ) : (
-                  <div className="mx-auto grid h-[210px] w-[220px] place-items-center rounded-lg text-zinc-500">
-                    <img src={uploadImgIcon} alt="upload" className="h-48 w-48 opacity-70" />
-                  </div>
-                )}
+                <div className="mx-auto grid h-[210px] w-[220px] place-items-center rounded-lg text-zinc-500">
+                  <img src={uploadImgIcon} alt="upload" className="h-48 w-48 opacity-70" />
+                </div>
 
                 <div className="self-stretch h-14 text-center justify-start text-gray-500 opacity-50 text-xs font-normal font-['Helvetica']">
                   Dimension: Short side ≥ 480px, Long side ≤ 4096px<br />Format: JPG, JPEG, or PNG<br />Max Size: 10MB<br />
