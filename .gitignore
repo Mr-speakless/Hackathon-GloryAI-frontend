@@ -26,3 +26,5 @@ node_modules/
 # Ignore React Tailwind Components project
 /ReactTailwindComponents/
 
+ssh
+ssh.pub

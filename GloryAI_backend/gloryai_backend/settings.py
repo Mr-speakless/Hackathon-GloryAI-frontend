@@ -17,9 +17,12 @@ print("SETTINGS LOADED YOUCAM_BASE:", os.getenv("YOUCAM_BASE"))
 SECRET_KEY = 'django-insecure-97&7$$%48-jy3jxz4hc!7k+%1y7+)c)_87=x_)lyh2zu_yvadf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "gloryai.net",
+    "www.gloryai.net",
+]
 
 
 # Application definition
@@ -63,7 +66,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'gloryai_backend.wsgi.application'
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://gloryai.net",
+    "https://www.gloryai.net",
+]
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
@@ -119,6 +127,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5175",
     "http://127.0.0.1:5175",
+    "https://gloryai.net",
+    "https://www.gloryai.net",
     
 ]
 
