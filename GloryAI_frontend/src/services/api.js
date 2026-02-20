@@ -1,7 +1,7 @@
 import { getMockResult } from "./mockData";
 
 const USE_MOCK = false;
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
