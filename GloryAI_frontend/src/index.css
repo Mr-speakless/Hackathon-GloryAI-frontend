@@ -21,3 +21,48 @@
   background-color: #8c8c97; /* zinc-600 */
   border-radius: 9999px;
 }
+
+@keyframes ai-border-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: saturate(1) brightness(1);
+  }
+  50% {
+    transform: scale(1.003);
+    filter: saturate(1.08) brightness(1.03);
+  }
+}
+
+@keyframes ai-shimmer-sweep {
+  0% {
+    transform: translateX(-130%);
+  }
+  100% {
+    transform: translateX(180%);
+  }
+}
+
+@keyframes ai-core-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+.ai-border-breathe {
+  animation: ai-border-breathe 3s ease-in-out infinite;
+}
+
+.ai-shimmer-sweep {
+  animation: ai-shimmer-sweep 1.8s linear infinite;
+}
+
+.ai-core-pulse {
+  animation: ai-core-pulse 1.2s ease-in-out infinite;
+}

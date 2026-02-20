@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import imgFaceGood from "../../assets/images/261e0934b2ed31c6efad383265ad35110771692f.png";
 import imgTilt from "../../assets/images/6666bdb41fbf9baea89dcd292f11eb836f4326f3.png";
@@ -13,6 +13,7 @@ import GreenPass from "../../assets/icons/GreenPass.svg";
 import RedFail from "../../assets/icons/RedFail.svg";
 import { useAnalysisFlow } from "../../features/analysis/AnalysisFlowContext";
 import { TopNavPill } from "../../components/TopNavPill";
+import AnalysisInProgressCard from "../../components/AnalysisInProgressCard";
 
 const MAX_SIZE = 10 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
@@ -26,8 +27,8 @@ function validateFile(file) {
 
 function GuideImage({ src, label }) {
   return (
-    <div className="flex w-[62px] flex-col items-center justify-start">
-      <img src={src} alt={label} className="h-[82px] w-[62px] rounded-md object-cover shadow" />
+    <div className="flex w-[100px] flex-col items-center justify-start">
+      <img src={src} alt={label} className="h-[100px] w-[80px] rounded-md object-cover shadow" />
       <p className="mt-1 w-full text-center text-[10px] text-zinc-500">{label}</p>
     </div>
   );
@@ -46,9 +47,17 @@ function StepRow({ icon, text }) {
 
 export function SkinLabPage() {
   const navigate = useNavigate();
-  const { error, queueAnalysis, setError } = useAnalysisFlow();
+  const { error, queueAnalysis, setError, runQueuedAnalysis, isAnalyzing, pendingFile, analysisData } = useAnalysisFlow();
   const [previewUrl, setPreviewUrl] = useState("");
   const [localError, setLocalError] = useState("");
+  const [showAnalyzingCard, setShowAnalyzingCard] = useState(false);
+  const analysisStartedRef = useRef(false);
+  const runQueuedAnalysisRef = useRef(runQueuedAnalysis);
+  const isBusy = isAnalyzing || showAnalyzingCard;
+
+  useEffect(() => {
+    runQueuedAnalysisRef.current = runQueuedAnalysis;
+  }, [runQueuedAnalysis]);
 
   useEffect(() => {
     return () => {
@@ -56,7 +65,40 @@ export function SkinLabPage() {
     };
   }, [previewUrl]);
 
+  useEffect(() => {
+    if (!showAnalyzingCard) return;
+    if (!analysisData) return;
+    setShowAnalyzingCard(false);
+    navigate("/report");
+  }, [showAnalyzingCard, analysisData, navigate]);
+
+  useEffect(() => {
+    if (!showAnalyzingCard) return;
+    if (!pendingFile || analysisStartedRef.current) return;
+
+    analysisStartedRef.current = true;
+    let cancelled = false;
+
+    async function run() {
+      const ok = await runQueuedAnalysisRef.current();
+      if (cancelled) return;
+      analysisStartedRef.current = false;
+      setShowAnalyzingCard(false);
+      if (ok) {
+        navigate("/report");
+      }
+    }
+
+    void run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [showAnalyzingCard, pendingFile, navigate]);
+
   function handleFile(nextFile) {
+    if (isBusy) return;
+
     const msg = validateFile(nextFile);
     setLocalError(msg);
     if (msg) {
@@ -69,12 +111,14 @@ export function SkinLabPage() {
       if (prev) URL.revokeObjectURL(prev);
       return URL.createObjectURL(nextFile);
     });
+
     queueAnalysis(nextFile);
-    navigate("/scanning");
+    setShowAnalyzingCard(true);
   }
 
   function onInputChange(event) {
-    handleFile(event.target.files?.[0]);
+    void handleFile(event.target.files?.[0]);
+    event.target.value = "";
   }
 
   return (
@@ -98,47 +142,30 @@ export function SkinLabPage() {
             </div>
 
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="flex flex-col items-center text-center p-4 gap-2">
+                <img src={imgFaceGood} alt="good sample" className="h-[200px] w-[160px] rounded-md object-cover shadow" />
 
-              {/* LEFT BLUE DIV */}
-              <div className="flex flex-col items-center text-center p-4 gap-4">
-
-                <img
-                  src={imgFaceGood}
-                  alt="good sample"
-                  className="h-[180px] w-[160px] rounded-md object-cover shadow"
-                />
-
-                <p className="mt-4 text-[12px] text-zinc-600">
-                  Choose a clear front-facing face photo.
-                </p>
+                <p className="mt-4 text-[12px] text-zinc-600">Choose a clear front-facing face photo.</p>
 
                 <div className="mt-3 flex items-center justify-center gap-2">
                   <img src={GreenPass} alt="pass" className="h-5 w-5" />
                   <p className="text-xl font-semibold text-green-600">PASS</p>
                 </div>
-
               </div>
 
-
-              {/* RIGHT BLUE DIV */}
-              <div className="flex flex-col items-center justify-center p-4">
-
-                {/* 2x2 GRID */}
-                <div className="grid grid-cols-2 gap-6 place-items-center ">
+              <div className="flex flex-col items-center p-4 gap-8">
+                <div className="grid grid-cols-2 gap-2 place-items-center ">
                   <GuideImage src={imgTilt} label="Tilt" />
                   <GuideImage src={imgGlasses} label="Glasses" />
                   <GuideImage src={imgHair} label="Hair covering" />
                   <GuideImage src={imgMakeup} label="Makeup" />
                 </div>
 
-                {/* BOTTOM HORIZONTAL DIV */}
-                <div className="mt-6 flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <img src={RedFail} alt="fail" className="h-5 w-5" />
                   <p className="text-xl font-semibold text-orange-500">FAIL</p>
                 </div>
-
               </div>
-
             </div>
           </section>
 
@@ -153,11 +180,17 @@ export function SkinLabPage() {
                   </div>
                 )}
 
-                <div className="self-stretch h-14 text-center justify-start text-gray-500 opacity-50 text-xs font-normal font-['Helvetica']">Dimension: Short side ≥ 480px, Long side ≤ 4096px<br />Format: JPG, JPEG, or PNG<br />Max Size: 10MB<br /></div>
+                <div className="self-stretch h-14 text-center justify-start text-gray-500 opacity-50 text-xs font-normal font-['Helvetica']">
+                  Dimension: Short side ≥ 480px, Long side ≤ 4096px<br />Format: JPG, JPEG, or PNG<br />Max Size: 10MB<br />
+                </div>
 
-                <label className="inline-block cursor-pointer rounded-full bg-black px-8 py-3 text-xl font-semibold text-white transition hover:-translate-y-0.5 hover:bg-zinc-800">
+                <label
+                  className={`inline-block rounded-full bg-black px-8 py-3 text-xl font-semibold text-white transition ${
+                    isBusy ? "cursor-not-allowed opacity-55" : "cursor-pointer hover:-translate-y-0.5 hover:bg-zinc-800"
+                  }`}
+                >
                   Scan
-                  <input type="file" hidden accept="image/jpeg,image/png" onChange={onInputChange} />
+                  <input type="file" hidden disabled={isBusy} accept="image/jpeg,image/png" onChange={onInputChange} />
                 </label>
 
                 {localError ? <p className="text-sm text-red-700">{localError}</p> : null}
@@ -167,6 +200,7 @@ export function SkinLabPage() {
           </section>
         </div>
       </div>
+      <AnalysisInProgressCard visible={isBusy} />
     </main>
   );
 }

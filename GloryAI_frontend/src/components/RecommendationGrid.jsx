@@ -25,7 +25,7 @@ function ProductCard({ item }) {
 
   return (
     <article className="flex flex-col gap-3 rounded-lg border border-white/45 bg-white/55 p-3">
-      <div className="h-48 w-full overflow-hidden rounded-lg bg-zinc-100">
+      <div className="h-48 w-full overflow-hidden rounded-lg bg-white">
         {imageSrc ? (
           <img className="h-full w-full object-contain" src={imageSrc} alt={item.name} loading="lazy" />
         ) : (
